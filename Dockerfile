@@ -1,5 +1,5 @@
 # Use official Python lightweight image
-FROM python:3.13-slim as builder
+FROM python:3.13-slim AS builder
 
 # Install uv
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
@@ -7,20 +7,24 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 # Set working directory
 WORKDIR /app
 
-# Copy the dependency file
-COPY pyproject.toml .
+# Copy the dependency files
+# We need both pyproject.toml and uv.lock for a frozen sync
+COPY pyproject.toml uv.lock ./
 
-# Install dependencies using uv into system environment for the slim image
-RUN uv pip install --system fastapi uvicorn google-genai python-dotenv jinja2 pydantic
+# Install dependencies using uv
+# This creates a .venv directory in /app/.venv
+RUN uv sync --frozen --no-dev
 
 # Second stage: final image
 FROM python:3.13-slim
 
 WORKDIR /app
 
-# Copy installed packages from builder
-COPY --from=builder /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
-COPY --from=builder /usr/local/bin/ /usr/local/bin/
+# Copy the virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
+
+# Update PATH to use the virtual environment
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy application files
 COPY . .
@@ -33,4 +37,5 @@ ENV PORT=8080
 ENV PYTHONUNBUFFERED=1
 
 # Command to run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+# We use shell form to expand the $PORT variable correctly
+CMD uvicorn main:app --host 0.0.0.0 --port $PORT

@@ -25,8 +25,14 @@ os.makedirs("static/videos", exist_ok=True)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="static")
-# Initialize genai client. This expects GOOGLE_API_KEY in env
-client = genai.Client(http_options={"api_version": settings.API_VERSION})
+# Initialize genai client. Explicitly stripping quotes helps avoid common Docker env issues.
+api_key = os.getenv("GOOGLE_API_KEY")
+if api_key:
+    api_key = api_key.strip("\"'")
+
+client = genai.Client(
+    api_key=api_key, http_options={"api_version": settings.API_VERSION}
+)
 
 
 def generate_educational_diagram(prompt: str) -> str:
