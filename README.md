@@ -1,11 +1,11 @@
 # GeminiLens: The Interactive Educational Explainer
 
-GeminiLens is an adaptive AI teacher that explains complex concepts using text and dynamically generated educational diagrams. It uses the new `google-genai` SDK with Gemini 2.5 Flash and Imagen 3/4 via Function Calling.
+GeminiLens is an adaptive AI teacher that explains complex concepts using text and dynamically generated educational diagrams. It uses the new `google-genai` SDK with Gemini 3 Flash and Imagen 4 via Function Calling.
 
 ## Prerequisites
 
 - [uv](https://github.com/astral-sh/uv) (Extremely fast Python package installer and resolver)
-- Python 3.12+
+- Python 3.13+
 - A Google Cloud API Key with access to Vertex AI / Gemini API.
 
 ## Installation
