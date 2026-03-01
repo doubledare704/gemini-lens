@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GeminiLens Presentation</title>
+    <link rel="icon" type="image/png" href="/static/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="shortcut icon" href="/static/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png" />
+    <link rel="manifest" href="/static/site.webmanifest" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/theme/black.min.css" id="theme">
+
+    <style>
+        .reveal h2 {
+            text-transform: none;
+        }
+
+        .slide-content {
+            font-size: 0.8em;
+            text-align: left;
+            margin-top: 1em;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides" id="slides-container">
+            <!-- Dynamic slides will be injected here -->
+        </div>
+    </div>
+
+    <!-- The actual slides data injected by FastAPI -->
+    <script>
+        window.SLIDES_DATA = {{ slides_data | tojson | safe }};
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('slides-container');
+            const slides = window.SLIDES_DATA;
+
+            if (slides && Array.isArray(slides)) {
+                slides.forEach(slide => {
+                    const section = document.createElement('section');
+
+                    let html = `<h2>${slide.title}</h2>`;
+
+                    if (slide.content) {
+                        html += `<div class="slide-content">${slide.content}</div>`;
+                    }
+
+                    if (slide.media_type === 'image' && slide.media_url) {
+                        html += `<img src="${slide.media_url}" style="max-height: 400px; margin-top: 20px; border-radius: 8px;" />`;
+                    } else if (slide.media_type === 'video' && slide.media_url) {
+                        section.setAttribute('data-background-video', slide.media_url);
+                        section.setAttribute('data-background-video-muted', 'true');
+                        section.setAttribute('data-background-video-loop', 'true');
+                    }
+
+                    section.innerHTML = html;
+                    container.appendChild(section);
+                });
+            } else {
+                container.innerHTML = '<section><h2>No Slides Found</h2></section>';
+            }
+
+            Reveal.initialize({
+                hash: true,
+                slideNumber: true,
+                controls: true,
+                progress: true,
+                center: true
+                // Optionally configure plugins if needed
+            });
+        });
+    </script>
+</body>
+
+</html>

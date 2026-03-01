@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeminiLens: Interactive Educational Explainer</title>
+    <link rel="stylesheet" href="/static/style.css?v=4">
+    <link rel="icon" type="image/png" href="/static/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="shortcut icon" href="/static/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png" />
+    <link rel="manifest" href="/static/site.webmanifest" />
+    <!-- Markdown parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>GeminiLens 🌊</h1>
+            <p>Your interactive multimodal AI teacher.</p>
+        </header>
+
+        <main>
+            <div id="chat-container">
+                <div id="messages">
+                    <div class="message ai-message">
+                        Hello! I am GeminiLens. What complex concept would you like me to explain today? E.g., "How does
+                        a quantum computer work?"
+                    </div>
+                </div>
+            </div>
+            <div id="suggested-prompts-container" class="suggestions"></div>
+
+            <div class="input-area">
+                <input type="text" id="topic-input" placeholder="Type a concept here..." />
+                <button id="send-btn">Explain</button>
+            </div>
+            <div class="presentation-actions" style="margin-top: 15px; text-align: center;">
+                <button id="generate-deck-btn" style="
+                    background: linear-gradient(135deg, #6e8efb, #a777e3);
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    cursor: pointer;
+                    display: none;
+                ">
+                    ✨ Generate Recap Deck
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/app.js?v=4"></script>
+</body>
+
+</html>
