@@ -38,3 +38,33 @@ To deploy this application seamlessly to Google Cloud Run, we have included an a
    ./deploy.sh
    ```
 5. The script will ask for your `GOOGLE_API_KEY` to securely pass it as an environment variable to the Cloud Run container. Once done, it will output the live URL.
+
+## Architecture Diagram
+
+The diagram below reflects the current Google Cloud deployment flow implemented by `deploy.sh`.
+
+```mermaid
+flowchart LR
+    Dev[Developer] --> Script[deploy.sh]
+    Script --> Gcloud[gcloud CLI]
+    Script --> Key[Prompt for GOOGLE_API_KEY]
+
+    subgraph GCP[Google Cloud Platform]
+        Build[Cloud Build]
+        Image[Container Image\ngcr.io/PROJECT_ID/gemini-lens]
+        Run[Cloud Run Service\nGeminiLens FastAPI app]
+    end
+
+    Gcloud -->|gcloud builds submit| Build
+    Build -->|builds from Dockerfile| Image
+    Gcloud -->|gcloud run deploy| Run
+    Image --> Run
+    Key -->|--set-env-vars| Run
+
+    User[Browser / End User] <-->|HTTPS| Run
+    Run -->|Serves UI + API| Static[Static assets + HTML]
+    Run -->|google-genai SDK using GOOGLE_API_KEY| Gemini[Gemini / Imagen APIs]
+```
+
+For a deeper view of the internal application flow, see `ARCHITECTURE.md`.
+![Image](arch.svg)
