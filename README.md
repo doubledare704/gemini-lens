@@ -67,4 +67,3 @@ flowchart LR
 ```
 
 For a deeper view of the internal application flow, see `ARCHITECTURE.md`.
-![Image](arch.svg)
