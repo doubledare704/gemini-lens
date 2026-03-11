@@ -236,7 +236,6 @@ async def generate_video(request: QueryRequest):
                 aspect_ratio="16:9",
                 duration_seconds=6,
                 generate_audio=False,
-                fps=24,
             ),
         )
         op_name = op.name
